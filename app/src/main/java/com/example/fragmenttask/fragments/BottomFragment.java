@@ -43,6 +43,7 @@ public class BottomFragment extends Fragment {
         add.setOnClickListener(view -> {
             String itemName = input.getText().toString();
             listener.addItem(itemName);
+            input.getText().clear();
         });
 
         delete.setOnClickListener(view -> listener.deleteItems());
