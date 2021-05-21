@@ -1,5 +1,6 @@
 package com.example.fragmenttask;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,18 +33,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.textView.setText(list.get(position).first);
-        if(list.get(position).second){
-            holder.checkBox.toggle();
-        }
+        holder.checkBox.setChecked(list.get(position).second);
+        
 
         holder.checkBox.setOnCheckedChangeListener(null);
 
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                Pair<String, Boolean> pair = list.get(position);
-                list.set(position, new Pair<>(pair.first, !pair.second));
-            }
+        holder.checkBox.setOnCheckedChangeListener((compoundButton, checked) -> {
+            Pair<String, Boolean> pair = list.get(position);
+            list.set(position, new Pair<>(pair.first, checked));
         });
     }
 
@@ -58,12 +55,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     }
 
     public void deleteItems() {
-        List<Pair<String, Boolean>> newList = new ArrayList<>();
-        for(Pair<String, Boolean> pair : list){
-            if(!pair.second) newList.add(pair);
+        for(int i=list.size()-1;i>=0;--i) {
+           if(list.get(i).second) {
+               list.remove(i);
+               notifyItemRemoved(i);
+               notifyItemRangeChanged(i, getItemCount()-i);
+           }
         }
-        this.list = newList;
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

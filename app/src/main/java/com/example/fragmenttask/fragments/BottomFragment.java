@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.fragmenttask.R;
 
@@ -42,8 +43,11 @@ public class BottomFragment extends Fragment {
 
         add.setOnClickListener(view -> {
             String itemName = input.getText().toString();
-            listener.addItem(itemName);
-            input.getText().clear();
+            if(itemName.length() == 0) Toast.makeText(getContext(), "Item name is empty", Toast.LENGTH_SHORT).show();
+            else {
+                listener.addItem(itemName);
+                input.getText().clear();
+            }
         });
 
         delete.setOnClickListener(view -> listener.deleteItems());
